@@ -80,7 +80,7 @@ export const cardFields = {
 const DraggableItemMenu = () => {
   const [openFields, setOpenFields] = useState({
     Title: true,
-    Labels: true,
+    Labels: false,
     Description: false,
     'Acceptance Criteria': false,
     Parent: false,
