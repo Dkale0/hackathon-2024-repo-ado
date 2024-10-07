@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import ADOCard from '../components/core/ADOCard';
@@ -7,16 +7,45 @@ import waterBackground from '../assets/water.gif';
 
 const GameContainer = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: stretch;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
   padding: 20px;
-  gap: 20px;
   background-image: url(${waterBackground});
   background-repeat: repeat;
   background-size: auto;
+  position: relative;
+`;
+
+const GameContent = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: ${props => props.topMargin}px;
+  transition: margin-top 0.3s ease-in-out;
+`;
+
+const PromptBox = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1400px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #000;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  font-size: 16px;
+  line-height: 1.4;
+  text-align: left;
 `;
 
 const ADOCardGame = () => {
+  const userStoryPrompt = "I need a card created for implementing login functionality. It's part of our User Authentication Epic. Low priority for now, but it'll be a key feature. We're talking email and password login, with proper error handling and a password reset flow. Should be a frontend task, probably a 5-point story. Let's target it for Sprint 1. Any questions, just ping me!";
+
   const [cardData, setCardData] = useState({
     fields: Object.fromEntries(
       Object.keys(cardFields).map(field => [field, { value: '' }])
@@ -28,6 +57,8 @@ const ADOCardGame = () => {
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const [promptHeight, setPromptHeight] = useState(0);
+  const promptRef = useRef(null);
 
   const correctAnswers = {
     Title: 'Implement login functionality',
@@ -65,6 +96,12 @@ const ADOCardGame = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
+  }, []);
+
+  useEffect(() => {
+    if (promptRef.current) {
+      setPromptHeight(promptRef.current.offsetHeight);
+    }
   }, []);
 
   const onDragEnd = (result) => {
@@ -110,18 +147,21 @@ const ADOCardGame = () => {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <GameContainer style={{ width: windowSize.width, height: windowSize.height }}>
-        <DraggableItemMenu />
-        <ADOCard 
-          cardData={cardData} 
-          onItemClick={onItemClick} 
-          correctAnswers={correctAnswers}
-          allCorrect={allCorrect}
-          onProceed={onProceed}
-        />
-      </GameContainer>
-    </DragDropContext>
+    <GameContainer>
+      <PromptBox ref={promptRef}>{userStoryPrompt}</PromptBox>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <GameContent topMargin={promptHeight + 40}>
+          <DraggableItemMenu />
+          <ADOCard 
+            cardData={cardData} 
+            onItemClick={onItemClick} 
+            correctAnswers={correctAnswers}
+            allCorrect={allCorrect}
+            onProceed={onProceed}
+          />
+        </GameContent>
+      </DragDropContext>
+    </GameContainer>
   );
 };
 
