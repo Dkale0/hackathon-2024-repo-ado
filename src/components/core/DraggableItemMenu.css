@@ -1,0 +1,37 @@
+.draggable-item-menu {
+  width: 380px;
+  height: 680px;
+  background-color: var(--menu-bg);
+  border: 1px solid var(--menu-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+}
+
+.option-category {
+  margin-bottom: 20px;
+}
+
+.option-category h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.menu-item {
+  padding: 10px;
+  margin-bottom: 8px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: move;
+  font-size: 14px;
+}
+
+.menu-item:hover {
+  background-color: #f9f9f9;
+}
+
+.menu-item.dragging {
+  opacity: 0.5;
+}
