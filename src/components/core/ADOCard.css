@@ -9,7 +9,7 @@
   --text-color: #333;
   --accent-color: #0078d4;
   --field-font-size: 12px;
-  --label-font-size: 11px;
+  --label-font-size: 14px;
   --border-radius: 3px;
   --spacing-sm: 4px;
   --spacing-md: 8px;
@@ -49,7 +49,7 @@
 }
 
 .card-type-id {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-color);
 }
@@ -68,6 +68,7 @@
   padding: var(--spacing-md);
   background-color: var(--main-bg);
   padding-bottom: 60px;
+  padding-right: var(--spacing-lg);  /* Added right padding */
 }
 
 .title-section, .assigned-section {
@@ -79,7 +80,10 @@
 .assigned-section {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;  /* Changed from flex-end to align tops */
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--card-border);
 }
 
 .assigned-to-column {
@@ -92,13 +96,18 @@
   margin-bottom: var(--spacing-sm);
 }
 
+.assigned-to-column label,
+.labels-column label {  /* Added label styling for labels column */
+  margin-bottom: var(--spacing-sm);
+}
+
 .card-labels {
   flex: 3;
   margin-left: var(--spacing-md);
   background-color: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--border-radius);
-  height: 32px;
+  height: 32px;  /* Match height with assigned-to dropdown */
   display: flex;
   align-items: center;
   padding: 0 var(--spacing-md);
@@ -109,6 +118,13 @@ label {
   font-weight: 600;
   color: var(--text-color);
   margin-bottom: var(--spacing-sm);
+}
+
+.labels-column {  /* New class for labels column */
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  margin-left: var(--spacing-md);
 }
 
 .field-value, .field-dropdown {
@@ -122,7 +138,7 @@ label {
 }
 
 .field.title .field-value {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--accent-color);
   background-color: #e6f7ff;
@@ -171,7 +187,7 @@ label {
 
 .planning-field,
 .related-work {
-  padding-right: var(--spacing-md);
+  padding-right: 0;  /* Removed padding-right as it's now on the container */
 }
 
 .planning-field {
@@ -217,7 +233,7 @@ label {
 
 .related-work h3 {
   margin-bottom: var(--spacing-md);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
 }
 

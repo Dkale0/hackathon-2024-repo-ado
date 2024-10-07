@@ -6,7 +6,7 @@ import './ADOCard.css';
 const AssignedSection = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
   padding: var(--spacing-md) var(--spacing-lg);
   background-color: var(--header-bg);
   border-bottom: 1px solid var(--card-border);
@@ -15,11 +15,13 @@ const AssignedSection = styled.div`
 const AssignedToColumn = styled.div`
   display: flex;
   flex-direction: column;
-  width: 40%;
+  flex: 1;
 `;
 
 const LabelsColumn = styled.div`
-  flex-grow: 1;
+  flex: 3;
+  display: flex;
+  flex-direction: column;
   margin-left: var(--spacing-md);
 `;
 
@@ -77,6 +79,7 @@ const ADOCard = ({ cardData, onItemClick, correctAnswers, onProceed, onHint }) =
           <div 
             className={`field-value ${correctAnswers[fieldKey] === safelyGetField(fieldKey).value ? 'correct' : ''}`}
             onClick={() => safelyGetField(fieldKey).value && onItemClick(fieldKey)}
+            data-placeholder={`Drag ${fieldKey} here`}
           >
             {safelyGetField(fieldKey).value || `Drag ${fieldKey} here`}
           </div>
@@ -101,7 +104,7 @@ const ADOCard = ({ cardData, onItemClick, correctAnswers, onProceed, onHint }) =
       <div className="card-header">
         <div className="card-icon-id">
           <span className="card-icon">📘</span>
-          <span className="card-type-id">USER STORY {cardData?.id || 'US1001'}</span>
+          <span className="card-type-id">USER STORY {cardData?.id || '502'}</span>
         </div>
       </div>
       <div className="card-content">

@@ -5,62 +5,18 @@ import ADOCard from '../components/core/ADOCard';
 import DraggableItemMenu, { cardFields } from '../components/core/DraggableItemMenu';
 import waterBackground from '../assets/water.gif';
 
-const GameContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-  background-image: url(${waterBackground});
-  background-repeat: repeat;
-  background-size: auto;
-  position: relative;
-`;
-
-const GameContent = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: ${props => props.topMargin}px;
-  transition: margin-top 0.3s ease-in-out;
-`;
-
-const PromptBox = styled.div`
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 1400px;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #000;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  font-size: 16px;
-  line-height: 1.4;
-  text-align: left;
-`;
-
-const ADOCardGame = () => {
-  const userStoryPrompt = "I need a card created for implementing login functionality. It's part of our User Authentication Epic. Low priority for now, but it'll be a key feature. We're talking email and password login, with proper error handling and a password reset flow. Should be a frontend task, probably a 5-point story. Let's target it for Sprint 1. Any questions, just ping me!";
-
-  const [cardData, setCardData] = useState({
-    fields: Object.fromEntries(
-      Object.keys(cardFields).map(field => [field, { value: '' }])
-    ),
-  });
-
-  const [allCorrect, setAllCorrect] = useState(false);
-  const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
-  const [promptHeight, setPromptHeight] = useState(0);
-  const promptRef = useRef(null);
-
-  const correctAnswers = {
+const gameScenario = {
+  prompt: {
+    title: "Help Create a User Story:",
+    speaker: "John Doe",
+    message: "I need a card created for implementing login functionality. Here are the details:",
+    details: [
+      "It's part of our User Authentication Epic, low priority but a key feature",
+      "We need email/password login, error handling, and a password reset flow",
+      "It's a frontend task, probably a 5-point story for Sprint 1"
+    ]
+  },
+  correctAnswers: {
     Title: 'Implement login functionality',
     Labels: 'Feature',
     Description: 'Create a secure login system with email and password',
@@ -74,11 +30,75 @@ const ADOCardGame = () => {
     iteration: 'Sprint 1',
     storyPoints: '5',
     priority: '2'
-  };
+  }
+};
+
+const GameContainer = styled.div`
+  min-height: 100vh;
+  padding: 20px;
+  background-image: url(${waterBackground});
+  background-repeat: repeat;
+  background-size: auto;
+  overflow-y: auto;
+`;
+
+const GameContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const PromptBox = styled.div`
+  width: 80%;
+  max-width: 800px;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #000;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  line-height: 1.4;
+  text-align: center;
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    color: #333;
+  }
+
+  ul {
+    margin: 10px 0;
+    padding-left: 20px;
+    text-align: left;
+    display: inline-block;
+  }
+`;
+
+const GameplayArea = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+`;
+
+const ADOCardGame = () => {
+  const [cardData, setCardData] = useState({
+    fields: Object.fromEntries(
+      Object.keys(cardFields).map(field => [field, { value: '' }])
+    ),
+  });
+
+  const [allCorrect, setAllCorrect] = useState(false);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+  const promptRef = useRef(null);
 
   useEffect(() => {
-    const isAllCorrect = Object.keys(correctAnswers).every(
-      key => cardData.fields[key]?.value === correctAnswers[key]
+    const isAllCorrect = Object.keys(gameScenario.correctAnswers).every(
+      key => cardData.fields[key]?.value === gameScenario.correctAnswers[key]
     );
     setAllCorrect(isAllCorrect);
   }, [cardData]);
@@ -96,12 +116,6 @@ const ADOCardGame = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
-
-  useEffect(() => {
-    if (promptRef.current) {
-      setPromptHeight(promptRef.current.offsetHeight);
-    }
   }, []);
 
   const onDragEnd = (result) => {
@@ -141,26 +155,35 @@ const ADOCardGame = () => {
   };
 
   const onProceed = () => {
-    // Handle proceeding to the next step or level
     console.log("Proceeding to next step");
     // You can add your logic here for what happens when the user proceeds
   };
 
   return (
     <GameContainer>
-      <PromptBox ref={promptRef}>{userStoryPrompt}</PromptBox>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <GameContent topMargin={promptHeight + 40}>
-          <DraggableItemMenu />
-          <ADOCard 
-            cardData={cardData} 
-            onItemClick={onItemClick} 
-            correctAnswers={correctAnswers}
-            allCorrect={allCorrect}
-            onProceed={onProceed}
-          />
-        </GameContent>
-      </DragDropContext>
+      <GameContent>
+        <PromptBox ref={promptRef}>
+          <h2>{gameScenario.prompt.title}</h2>
+          <p>{gameScenario.prompt.speaker} says: "{gameScenario.prompt.message}"</p>
+          <ul>
+            {gameScenario.prompt.details.map((detail, index) => (
+              <li key={index}>{detail}</li>
+            ))}
+          </ul>
+        </PromptBox>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <GameplayArea>
+            <DraggableItemMenu />
+            <ADOCard 
+              cardData={cardData} 
+              onItemClick={onItemClick} 
+              correctAnswers={gameScenario.correctAnswers}
+              allCorrect={allCorrect}
+              onProceed={onProceed}
+            />
+          </GameplayArea>
+        </DragDropContext>
+      </GameContent>
     </GameContainer>
   );
 };
